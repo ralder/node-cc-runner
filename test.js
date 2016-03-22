@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 var runner = require('./index');
 
 var run = runner();
@@ -8,18 +10,19 @@ run.on('listening', () => {
   // run.status(console.log);
   run.compile({
     options: {
-        foldConstants: true
+      foldConstants: true
     },
     externs: [{
-        fileName: 'foo.js',
-        code: ''
+      fileName: 'foo.js',
+      code: ''
     }],
     sources: [{
-        fileName: 'bar.js',
-        code: '(console.log(function(){return 42-9;}));'
+      fileName: 'bar.js',
+      code: '(console.log(function(){return 42-9;}));'
     }]
-  }, console.log);
+  }, (error, res) => console.log(res));
 });
+
 run.on('error', error => {
   console.error('DAS ERROR');
   console.error(error);
