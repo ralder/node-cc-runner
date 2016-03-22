@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "getjar": "curl -O -L https://github.com/monai/cc-web-runner/releases/download/v1.0.2/cc-web-runner-1.0.2.jar"
+    "prepublish": "curl -O -L https://github.com/monai/cc-web-runner/releases/download/v1.0.2/cc-web-runner-1.0.2.jar"
   },
   "author": "Adform",
   "license": "ISC",
