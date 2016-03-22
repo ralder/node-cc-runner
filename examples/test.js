@@ -7,7 +7,8 @@ run.on('online', () => console.log('online'));
 run.on('listening', () => {
   console.log('listening');
 
-  // run.status(console.log);
+  run.status(console.log);
+
   run.compile({
     options: {
       foldConstants: true
@@ -24,6 +25,5 @@ run.on('listening', () => {
 });
 
 run.on('error', error => {
-  console.error('DAS ERROR');
   console.error(error);
 });
