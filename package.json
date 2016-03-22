@@ -1,0 +1,16 @@
+{
+  "name": "node-cc-runner",
+  "version": "0.0.1",
+  "description": "Closure Compiler Runner",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adform",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^1.5.2",
+    "locate-java-home": "^0.1.5",
+    "stream-util2": "^0.0.3"
+  }
+}
