@@ -13,6 +13,7 @@ var javaHome = require('locate-java-home');
 var defaults = {
   jar        : 'cc-web-runner-1.0.2.jar',
   port       : 8081,
+  startup    : 5000,
   statusUrl  : { protocol: 'http:', hostname: '127.0.0.1', path: '/status' },
   compileUrl : { protocol: 'http:', hostname: '127.0.0.1', path: '/compile' }
 };
@@ -87,21 +88,42 @@ function startRunner(runner, next) {
 }
 
 function test(error, runner) {
-  var options = runner._options;
+  var options, success, t0, lastError;
+
+  options = runner._options;
+  success = false;
 
   if (error) {
     debug('Error\n', error.stack);
     runner.emit('error', error);
   } else {
+    t0 = +new Date();
+
     debug('Online');
     runner.emit('online');
     options.cp.once('error', (error) => runner.emit('error', error));
-    status(runner, (error, res) => {
+
+    async.doWhilst(function (next) {
+      status(runner, (error) => {
+        if (error) {
+          debug('Retry');
+          lastError = error;
+          setTimeout(next, Math.min(1000, options.startup / 3));
+        } else {
+          success = true;
+          debug('Listening');
+          runner.emit('listening');
+        }
+      });
+    }, function () {
+      return ! success && (+new Date()) - t0 < options.startup;
+    }, function (error) {
+      if ( ! error && ! success) {
+        error = lastError;
+      }
+
       if (error) {
         runner.emit('error', error);
-      } else {
-        debug('Listening');
-        runner.emit('listening');
       }
     });
   }
