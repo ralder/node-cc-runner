@@ -17,6 +17,9 @@
     "stream-util2": "^0.0.3"
   },
   "devDependencies": {},
+  "engines": {
+    "node": ">=4"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/adform/node-cc-runner.git"
