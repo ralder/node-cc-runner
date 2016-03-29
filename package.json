@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepublish": "curl -O -L https://github.com/monai/cc-web-runner/releases/download/v1.0.2/cc-web-runner-1.0.2.jar"
+    "install": "curl -O -L https://github.com/monai/cc-web-runner/releases/download/v1.0.2/cc-web-runner-1.0.2.jar"
   },
   "dependencies": {
     "async": "^1.5.2",
