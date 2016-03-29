@@ -1,5 +1,5 @@
 {
-  "name": "node-cc-runner",
+  "name": "cc-runner",
   "version": "0.0.1",
   "description": "Closure Compiler Runner",
   "main": "index.js",
