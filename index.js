@@ -39,7 +39,7 @@ function create(options) {
     options = {};
   }
 
-  options = Object.assign(defaults, options);
+  options = Object.assign({}, defaults, options);
   options.runner = runner;
   options.statusUrl.port  = options.port;
   options.compileUrl.port = options.port;
