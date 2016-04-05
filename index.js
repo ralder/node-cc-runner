@@ -27,8 +27,13 @@ module.exports = create;
 function create(options) {
   var runner = new EE();
 
-  runner.status = function $status(done) {
-    status(this, done);
+  runner.status = function $status(query, done) {
+    if (typeof query == 'function') {
+      done  = query;
+      query = {};
+    }
+
+    status(this, query, done);
   };
 
   runner.externs = function $externs(done) {
@@ -114,7 +119,7 @@ function test(error, runner) {
     options.cp.once('error', (error) => runner.emit('error', error));
 
     async.doWhilst(function (next) {
-      status(runner, (error) => {
+      status(runner, {}, (error) => {
         if (error) {
           debug('Retry');
           lastError = error;
@@ -139,10 +144,17 @@ function test(error, runner) {
   }
 }
 
-function status(instance, done) {
-  var url = Object.assign({
-    method: 'GET'
+function status(instance, query, done) {
+  var url;
+
+  query = Object.keys(query)
+  .map(key => [ key, query[key] ].join('='))
+  .reduce((q, pair) => q + pair, '?');
+
+  url = Object.assign({
+    method: 'GET',
   }, instance._options.statusUrl);
+  url.path += query;
 
   debug('Status');
   _requestAndDecode(url, done);

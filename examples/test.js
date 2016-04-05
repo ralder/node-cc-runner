@@ -9,7 +9,7 @@ run.on('listening', () => {
   console.log('listening');
 
 
-  run.status((error, res) => {
+  run.status({ level: 'SIMPLE_OPTIMIZATIONS' }, (error, res) => {
     console.log('--> status');
     console.log(util.inspect(error || res, { colors: true }));
   });
