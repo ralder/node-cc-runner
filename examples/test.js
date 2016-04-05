@@ -26,6 +26,11 @@ run.on('listening', () => {
     console.log('--> compile');
     console.log(util.inspect(error || res, { colors: true }));
   });
+
+  // run.externs((error, res) => {
+  //   console.log('--> externs');
+  //   console.log(util.inspect(error || res, { colors: true }));
+  // });
 });
 
 run.on('error', error => {
