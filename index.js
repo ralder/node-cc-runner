@@ -11,7 +11,7 @@ var stream   = require('stream-util2');
 var javaHome = require('locate-java-home');
 
 var defaults = {
-  jar        : 'cc-web-runner-1.0.2.jar',
+  jar        : 'cc-web-runner-1.0.3.jar',
   port       : 8081,
   startup    : 5000,
   statusUrl  : { protocol: 'http:', hostname: '127.0.0.1', path: '/status' },
