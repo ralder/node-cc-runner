@@ -15,13 +15,9 @@ run.on('listening', () => {
   });
 
   run.compile({
-    options: {
-      foldConstants: true
+    optimizations: {
+      level: "SIMPLE_OPTIMIZATIONS"
     },
-    externs: [{
-      fileName: 'foo.js',
-      code: ''
-    }],
     sources: [{
       fileName: 'bar.js',
       code: '(console.log(function(){return 42-9;}));'
