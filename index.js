@@ -10,12 +10,15 @@ var async    = require('async');
 var stream   = require('stream-util2');
 var javaHome = require('locate-java-home');
 
+var urlTpl = { protocol: 'http:', hostname: '127.0.0.1' };
+
 var defaults = {
-  jar        : 'cc-web-runner-1.0.2.jar',
+  jar        : 'cc-web-runner-standalone-1.0.4.jar',
   port       : 8081,
   startup    : 5000,
-  statusUrl  : { protocol: 'http:', hostname: '127.0.0.1', path: '/status' },
-  compileUrl : { protocol: 'http:', hostname: '127.0.0.1', path: '/compile' }
+  statusUrl  : Object.assign({}, urlTpl, { path: '/status' }),
+  externsUrl : Object.assign({}, urlTpl, { path: '/externs' }),
+  compileUrl : Object.assign({}, urlTpl, { path: '/compile' })
 };
 
 var debug = debuglog('cc-runner');
@@ -24,12 +27,23 @@ module.exports = create;
 function create(options) {
   var runner = new EE();
 
-  runner.status = function $status(done) {
-    status(this, done);
+  runner.status = function $status(query, done) {
+    if (typeof query == 'function') {
+      done  = query;
+      query = {};
+    }
+
+    status(this, query, done);
   };
+
+  runner.externs = function $externs(done) {
+    externs(this, done);
+  };
+
   runner.compile = function $compile(data, done) {
     compile(this, data, done);
   };
+
   runner.kill = function $kill() {
     kill(this);
   };
@@ -42,6 +56,7 @@ function create(options) {
   options = Object.assign({}, defaults, options);
   options.runner = runner;
   options.statusUrl.port  = options.port;
+  options.externsUrl.port = options.port;
   options.compileUrl.port = options.port;
   runner._options = options;
 
@@ -104,7 +119,7 @@ function test(error, runner) {
     options.cp.once('error', (error) => runner.emit('error', error));
 
     async.doWhilst(function (next) {
-      status(runner, (error) => {
+      status(runner, {}, (error) => {
         if (error) {
           debug('Retry');
           lastError = error;
@@ -129,20 +144,29 @@ function test(error, runner) {
   }
 }
 
-function status(instance, done) {
-  var url = Object.assign({
-    method: 'GET'
+function status(instance, query, done) {
+  var url;
+
+  query = Object.keys(query)
+  .map(key => [ key, query[key] ].join('='))
+  .reduce((q, pair) => q + pair, '?');
+
+  url = Object.assign({
+    method: 'GET',
   }, instance._options.statusUrl);
+  url.path += query;
 
   debug('Status');
-  _request(url, (error, res) => {
-    if (error) {
-      debug('Error\n', error.stack);
-      done(error);
-    } else {
-      _decode(res, done);
-    }
-  });
+  _requestAndDecode(url, done);
+}
+
+function externs(instance, done) {
+  var url = Object.assign({
+    method: 'GET'
+  }, instance._options.externsUrl);
+
+  debug('Externs');
+  _requestAndDecode(url, done);
 }
 
 function compile(instance, data, done) {
@@ -152,6 +176,14 @@ function compile(instance, data, done) {
   }, instance._options.compileUrl);
 
   debug('Compile\n', data);
+  _requestAndDecode(url, done);
+}
+
+function kill(instance) {
+  instance._options.cp.kill();
+}
+
+function _requestAndDecode(url, done) {
   _request(url, (error, res) => {
     if (error) {
       debug('Error\n', error.stack);
@@ -162,14 +194,11 @@ function compile(instance, data, done) {
   });
 }
 
-function kill(instance) {
-  instance._options.cp.kill();
-}
-
 function _request(options, done) {
   var req;
 
   try {
+    debug('Request '+ JSON.stringify(options));
     req = http.request(options, (res) => {
       if (res.statusCode != 200) {
         done(new Error('HTTP '+ res.statusCode +' '+ res.statusMessage));

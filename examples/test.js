@@ -9,19 +9,15 @@ run.on('listening', () => {
   console.log('listening');
 
 
-  run.status((error, res) => {
+  run.status({ level: 'SIMPLE_OPTIMIZATIONS' }, (error, res) => {
     console.log('--> status');
     console.log(util.inspect(error || res, { colors: true }));
   });
 
   run.compile({
-    options: {
-      foldConstants: true
+    optimizations: {
+      level: "SIMPLE_OPTIMIZATIONS"
     },
-    externs: [{
-      fileName: 'foo.js',
-      code: ''
-    }],
     sources: [{
       fileName: 'bar.js',
       code: '(console.log(function(){return 42-9;}));'
@@ -30,6 +26,11 @@ run.on('listening', () => {
     console.log('--> compile');
     console.log(util.inspect(error || res, { colors: true }));
   });
+
+  // run.externs((error, res) => {
+  //   console.log('--> externs');
+  //   console.log(util.inspect(error || res, { colors: true }));
+  // });
 });
 
 run.on('error', error => {
