@@ -1,6 +1,6 @@
 {
   "name": "cc-runner",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Closure Compiler Runner",
   "main": "index.js",
   "files": [
