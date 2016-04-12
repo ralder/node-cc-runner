@@ -1,7 +1,6 @@
 /* jshint esversion: 6 */
 
 var EE       = require('events').EventEmitter;
-var url      = require('url');
 var path     = require('path');
 var http     = require('http');
 var debuglog = require('util').debuglog;
