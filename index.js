@@ -1,4 +1,4 @@
-/* jshint esversion: 6 */
+"use strict";
 
 var EE       = require('events').EventEmitter;
 var path     = require('path');
