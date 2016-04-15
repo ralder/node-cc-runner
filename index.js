@@ -47,11 +47,6 @@ function create(options) {
     kill(this);
   };
 
-  if (typeof options == 'function') {
-    done    = options;
-    options = {};
-  }
-
   options = Object.assign({}, defaults, options);
   options.runner = runner;
   options.statusUrl.port  = options.port;
