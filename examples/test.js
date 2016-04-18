@@ -1,4 +1,4 @@
-/* jshint esversion: 6 */
+"use strict";
 
 var util   = require('util');
 var runner = require('../index');
