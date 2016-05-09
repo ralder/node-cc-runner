@@ -1,6 +1,6 @@
 {
   "name": "cc-runner",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Closure Compiler Runner",
   "main": "index.js",
   "files": [
@@ -12,8 +12,7 @@
   },
   "dependencies": {
     "async": "^1.5.2",
-    "locate-java-home": "^0.1.5",
-    "stream-util2": "^0.0.3"
+    "locate-java-home": "^0.1.5"
   },
   "devDependencies": {},
   "engines": {
