@@ -1,6 +1,7 @@
-"use strict";
+/* jshint esversion: 6 */
 
 var EE       = require('events').EventEmitter;
+var url      = require('url');
 var path     = require('path');
 var http     = require('http');
 var debuglog = require('util').debuglog;
@@ -12,6 +13,7 @@ var javaHome = require('locate-java-home');
 var urlTpl = { protocol: 'http:', hostname: '127.0.0.1' };
 
 var defaults = {
+  javaArgs   : [],
   jar        : 'cc-web-runner-standalone-1.0.5.jar',
   port       : 8081,
   startup    : 5000,
@@ -46,6 +48,11 @@ function create(options) {
   runner.kill = function $kill() {
     kill(this);
   };
+
+  if (typeof options == 'function') {
+    done    = options;
+    options = {};
+  }
 
   options = Object.assign({}, defaults, options);
   options.runner = runner;
@@ -89,9 +96,10 @@ function startRunner(runner, next) {
     '-Dport='+ options.port,
     '-jar', path.resolve(__dirname, options.jar)
   ];
+      
 
   debug('Execute runner: %s %s', options.java, args.join(' '));
-  options.cp = spawn(options.java, args);
+  options.cp = spawn(options.java, args.concat(options.javaArgs));
 
   next(null, runner);
 }
