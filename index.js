@@ -14,7 +14,7 @@ var urlTpl = { protocol: 'http:', hostname: '127.0.0.1' };
 
 var defaults = {
   javaArgs   : [],
-  jar        : 'cc-web-runner-standalone-1.0.5.jar',
+  jar        : 'cc-web-runner-standalone-1.0.8.jar',
   port       : 8081,
   startup    : 5000,
   statusUrl  : Object.assign({}, urlTpl, { path: '/status' }),
